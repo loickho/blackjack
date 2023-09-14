@@ -1,4 +1,29 @@
 h1 {
   color: red;
+}
 
+body{
+  display: flex;
+}
+
+.container {
+  align-items: center;
+  margin: auto;
+}
+
+.cards{
+  /* height: 30vh; */
+  display: flex;
+}
+
+.card{
+  font-size: 38px;
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 175px;
+  width: 125px;
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

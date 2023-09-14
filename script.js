@@ -2,7 +2,9 @@ const suits = ['♠️', '♣', '❤️', '♦️'];
 const numbers = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'K', 'Q', 'A'];
 let deck = [];
 let cardToDeal = '';
-// let shuffledDeck = [];
+
+let dealerSpace = document.getElementById('dealer');
+let userSpace = document.getElementById('user')
 
 // create deck of cards
 function newDeck(){
@@ -31,14 +33,22 @@ function randomCard() {
   return cardToDeal
 }
 
+function createCardElement(card) {
+  const cardElement = document.createElement('div');
+  cardElement.classList.add('card');
+  cardElement.textContent = card;
+  return cardElement;
+}
 // deal random card to dealer twice (one facedown)
 for (let i = 0; i < 2; i++){
-  console.log(randomCard())
+  const dealerCardElement = createCardElement(randomCard());
+  dealerSpace.appendChild(dealerCardElement);
 }
 
 // deal random card to player twice
 for (let i = 0; i < 2; i++){
-  console.log(randomCard())
+  const userCardElement = createCardElement(randomCard());
+  userSpace.appendChild(userCardElement);
 }
 console.log(deck)
 
