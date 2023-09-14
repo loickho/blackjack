@@ -6,6 +6,9 @@ let userScore = 0;
 let dealerScore = 0;
 let dealerCards = [];
 let userCards = [];
+let hiddenDealerCardElement = null;
+let hiddenContent = '';
+
 
 let dealerSpace = document.getElementById('dealer');
 let userSpace = document.getElementById('user');
@@ -45,9 +48,9 @@ function createCardElement(card) {
   // face-down card
 function dealDealer(){
   var card = randomCard();
-  const hiddenDealerCardElement = createCardElement(card);
+  hiddenDealerCardElement = createCardElement(card);
   hiddenDealerCardElement.classList.add('flipped');
-  let hiddenContent = hiddenDealerCardElement.textContent;
+  hiddenContent = hiddenDealerCardElement.textContent;
   hiddenDealerCardElement.textContent = ('')
   dealerSpace.appendChild(hiddenDealerCardElement);
   dealerCards.push(card)
@@ -122,8 +125,10 @@ function playDealer(){
 
 // define what happens when stand is clicked
 function standHandler(){
-  hitMe.classList.add('hidden')
-  playDealer()
+  hitMe.classList.add('hidden');
+  playDealer();
+  hiddenDealerCardElement.classList.remove('flipped');
+  hiddenDealerCardElement.textContent = hiddenContent;
 }
 stand.addEventListener('click', standHandler);
 
@@ -131,7 +136,3 @@ stand.addEventListener('click', standHandler);
 // decide winner
 
 // play again
-
-
-// hiddenDealerCardElement.classList.remove('flipped')
-// hiddenDealerCardElement.textContent = hiddenContent
