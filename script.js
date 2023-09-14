@@ -2,9 +2,15 @@ const suits = ['♠️', '♣', '❤️', '♦️'];
 const numbers = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'K', 'Q', 'A'];
 let deck = [];
 let cardToDeal = '';
+let userScore = 0;
+let dealerScore = 0;
+let dealerCards = [];
+let userCards = [];
 
 let dealerSpace = document.getElementById('dealer');
-let userSpace = document.getElementById('user')
+let userSpace = document.getElementById('user');
+let hitMe = document.getElementById('hit');
+let stand = document.getElementById('stand');
 
 // create deck of cards
 function newDeck(){
@@ -13,17 +19,8 @@ function newDeck(){
       deck.push(number + suit)
     )
   )
-  // shuffle deck
-  // I realized shuffling the deck is not necessary, since pulling a random card from it does the same job.
-  // while (shuffledDeck.length < 52){
-  //   let random = Math.floor(Math.random() * deck.length)
-  //   if (!shuffledDeck.includes(deck[random])){
-  //     shuffledDeck.push(deck[random])
-  //   }
-  // }
 }
 newDeck()
-console.log(deck)
 
 // get random card and remove it from deck
 function randomCard() {
@@ -35,31 +32,106 @@ function randomCard() {
 
 function createCardElement(card) {
   const cardElement = document.createElement('div');
-  cardElement.classList.add('card');
+  if (card.includes('♠️') || card.includes('♣')){
+    cardElement.classList.add('card-black');
+  } else {
+    cardElement.classList.add('card-red')
+  }
   cardElement.textContent = card;
   return cardElement;
 }
+
 // deal random card to dealer twice (one facedown)
-for (let i = 0; i < 2; i++){
-  const dealerCardElement = createCardElement(randomCard());
+  // face-down card
+function dealDealer(){
+  var card = randomCard();
+  const hiddenDealerCardElement = createCardElement(card);
+  hiddenDealerCardElement.classList.add('flipped');
+  let hiddenContent = hiddenDealerCardElement.textContent;
+  hiddenDealerCardElement.textContent = ('')
+  dealerSpace.appendChild(hiddenDealerCardElement);
+  dealerCards.push(card)
+  //face-up card
+  var card = randomCard();
+  const dealerCardElement = createCardElement(card);
   dealerSpace.appendChild(dealerCardElement);
+  dealerCards.push(card)
 }
+dealDealer()
 
 // deal random card to player twice
-for (let i = 0; i < 2; i++){
-  const userCardElement = createCardElement(randomCard());
+function newUserCard(){
+  var card = randomCard();
+  const userCardElement = createCardElement(card);
   userSpace.appendChild(userCardElement);
+  userCards.push(card)
+  calcUserScore()
+  console.log(userScore)
+  checkIfOver()
 }
-console.log(deck)
+for (let i = 0; i < 2; i++){
+  newUserCard()
+}
 
-// define what happens when hit is clicked
-  // if goes over 21, lose
-  // otherwise, hit again or allow to stay
+// adds card when hit is clicked
+hitMe.addEventListener('click', newUserCard);
 
-// define what happens when stay is clicked
+// calculate user score
+function calcUserScore(){
+  userScore = 0;
+  for (let i = 0; i < userCards.length; i++){
+    if (userCards[i].includes('J') || userCards[i].includes('Q') || userCards[i].includes('K')){
+      userScore += 10
+    } else if (userCards[i].includes('A')){
+      userScore += 1
+    } else {
+      let num = parseInt(userCards[i].match(/\d+/g))
+      userScore += num
+    }
+  }
+}
+
+// calculate dealer score
+function calcDealerScore(){
+  dealerScore = 0;
+  for (let i = 0; i < dealerCards.length; i++){
+    if (dealerCards[i].includes('J') || dealerCards[i].includes('Q') || dealerCards[i].includes('K')){
+      dealerScore += 10
+    } else if (dealerCards[i].includes('A')){
+      dealerScore += 1
+    } else {
+      let num = parseInt(dealerCards[i].match(/\d+/g))
+      dealerScore += num
+    }
+  }
+}
+
+// if goes over 21, lose
+// otherwise, hit again or allow to stand
+function checkIfOver(){
+  if(userScore > 21){
+    alert("You lost")
+  }
+}
 
 // dealer hits again until score is greater than 17
+function playDealer(){
+  calcDealerScore();
+  console.log(dealerScore)
+}
+
+// define what happens when stand is clicked
+function standHandler(){
+  hitMe.classList.add('hidden')
+  playDealer()
+}
+stand.addEventListener('click', standHandler);
+
 
 // decide winner
 
 // play again
+
+
+// hiddenDealerCardElement.classList.remove('flipped')
+// hiddenDealerCardElement.textContent = hiddenContent

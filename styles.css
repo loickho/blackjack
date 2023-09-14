@@ -16,14 +16,38 @@ body{
   display: flex;
 }
 
-.card{
+.card-black {
   font-size: 38px;
-  border: 1px solid black;
-  border-radius: 5px;
+  border: 2px solid black;
+  border-radius: 10px;
   height: 175px;
   width: 125px;
   margin-left: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 4px 4px 8px;
+}
+
+.card-red {
+  font-size: 38px;
+  border: 2px solid black;
+  color: red;
+  border-radius: 10px;
+  height: 175px;
+  width: 125px;
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 4px 4px 8px black;
+}
+
+.flipped {
+  content: "test";
+  background-color: grey;
+}
+
+.hidden {
+  display: none;
 }
