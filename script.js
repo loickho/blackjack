@@ -78,6 +78,7 @@ function newUserCard(){
 function userInitial() {
   for (let i = 0; i < 2; i++){
     newUserCard()
+    checkIfOver()
   }
 }
 
@@ -86,47 +87,34 @@ hitMe.addEventListener('click', newUserCard);
 
 // calculate user score
 // CITATION: I didn't copy code from chatGPT, but I did ask it for advice on how to implement the logic for the ace.
-function calcUserScore(){
-  userScore = 0;
+function calcScore(cards){
+  let score = 0;
   let numAces = 0;
-  for (let i = 0; i < userCards.length; i++){
-    if (userCards[i].includes('J') || userCards[i].includes('Q') || userCards[i].includes('K')){
-      userScore += 10
-    } else if (userCards[i].includes('A')){
+  for (let i = 0; i < cards.length; i++){
+    if (cards[i].includes('J') || cards[i].includes('Q') || cards[i].includes('K')){
+      score += 10
+    } else if (cards[i].includes('A')){
       numAces += 1
-      userScore += 11
+      score += 11
     } else {
-      let num = parseInt(userCards[i].match(/\d+/g))
-      userScore += num
+      let num = parseInt(cards[i].match(/\d+/g))
+      score += num
     }
   }
 
-  while (numAces > 0 && userScore > 21){
-    userScore -= 10;
+  while (numAces > 0 && score > 21){
+    score -= 10;
     numAces -= 1;
   }
+  return score
 }
 
-// calculate dealer score
-function calcDealerScore(){
-  dealerScore = 0;
-  let numAces = 0;
-  for (let i = 0; i < dealerCards.length; i++){
-    if (dealerCards[i].includes('J') || dealerCards[i].includes('Q') || dealerCards[i].includes('K')){
-      dealerScore += 10
-    } else if (dealerCards[i].includes('A')){
-      numAces += 1
-      dealerScore += 11
-    } else {
-      let num = parseInt(dealerCards[i].match(/\d+/g))
-      dealerScore += num
-    }
-  }
+function calcUserScore(){
+  userScore = calcScore(userCards);
+}
 
-  while (numAces > 0 && dealerScore > 21){
-    dealerScore -= 10;
-    numAces -= 1;
-  }
+function calcDealerScore(){
+  dealerScore = calcScore(dealerCards);
 }
 
 // if goes over 21, lose
@@ -134,6 +122,9 @@ function calcDealerScore(){
 function checkIfOver(){
   if(userScore > 21){
     alert("You bust")
+  }
+  if (userScore == 21){
+    alert("Blackjack! You win!")
   }
 }
 
@@ -145,7 +136,7 @@ function playDealer(){
     calcDealerScore();
   }
   if (dealerScore == 21){
-    alert('dealer wins!')
+    alert('dealer hit 21 points and wins!')
   } else if (dealerScore > 21){
     alert('dealer bust. you win!')
   } else if (dealerScore > userScore){
@@ -165,7 +156,6 @@ function standHandler(){
 stand.addEventListener('click', standHandler);
 
 // play again
-
 
 function againHandler(){
   dealerSpace.innerHTML = '';

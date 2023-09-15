@@ -1,9 +1,40 @@
 h1 {
-  color: red;
+  color: white;
+  font-size: 48px;
+  text-align: center;
+  text-shadow: 2px 2px 4px black;
 }
 
-body{
+body {
   display: flex;
+  background-image: url(/images/perfect-green-grass.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+button {
+  border-radius: 8px;
+  border-style: none;
+  font-size: 16px;
+  padding: 12px;
+  margin-top: 25px;
+  background-color: lightpink
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  justify-content: space-between;
+  width: 300px;
+}
+
+#hit {
+  margin-right: 15px;
+}
+
+#again {
+  margin-left: 15px;
 }
 
 .container {
@@ -22,11 +53,13 @@ body{
   border-radius: 10px;
   height: 175px;
   width: 125px;
-  margin-left: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 4px 4px 8px;
+  background-color: white;
 }
 
 .card-red {
@@ -36,11 +69,13 @@ body{
   border-radius: 10px;
   height: 175px;
   width: 125px;
-  margin-left: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 4px 4px 8px black;
+  background-color: white;
 }
 
 .flipped {
