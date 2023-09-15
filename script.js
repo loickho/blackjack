@@ -14,6 +14,7 @@ let dealerSpace = document.getElementById('dealer');
 let userSpace = document.getElementById('user');
 let hitMe = document.getElementById('hit');
 let stand = document.getElementById('stand');
+let again = document.getElementById('again');
 
 // create deck of cards
 function newDeck(){
@@ -23,7 +24,6 @@ function newDeck(){
     )
   )
 }
-newDeck()
 
 // get random card and remove it from deck
 function randomCard() {
@@ -46,7 +46,7 @@ function createCardElement(card) {
 
 // deal random card to dealer twice (one facedown)
   // face-down card
-function dealDealer(){
+function dealerInitial(){
   var card = randomCard();
   hiddenDealerCardElement = createCardElement(card);
   hiddenDealerCardElement.classList.add('flipped');
@@ -54,13 +54,16 @@ function dealDealer(){
   hiddenDealerCardElement.textContent = ('')
   dealerSpace.appendChild(hiddenDealerCardElement);
   dealerCards.push(card)
-  //face-up card
+  newDealerCard()
+}
+
+// face-up dealer cards
+function newDealerCard(){
   var card = randomCard();
   const dealerCardElement = createCardElement(card);
   dealerSpace.appendChild(dealerCardElement);
   dealerCards.push(card)
 }
-dealDealer()
 
 // deal random card to player twice
 function newUserCard(){
@@ -72,40 +75,57 @@ function newUserCard(){
   console.log(userScore)
   checkIfOver()
 }
-for (let i = 0; i < 2; i++){
-  newUserCard()
+function userInitial() {
+  for (let i = 0; i < 2; i++){
+    newUserCard()
+  }
 }
 
 // adds card when hit is clicked
 hitMe.addEventListener('click', newUserCard);
 
 // calculate user score
+// CITATION: I didn't copy code from chatGPT, but I did ask it for advice on how to implement the logic for the ace.
 function calcUserScore(){
   userScore = 0;
+  let numAces = 0;
   for (let i = 0; i < userCards.length; i++){
     if (userCards[i].includes('J') || userCards[i].includes('Q') || userCards[i].includes('K')){
       userScore += 10
     } else if (userCards[i].includes('A')){
-      userScore += 1
+      numAces += 1
+      userScore += 11
     } else {
       let num = parseInt(userCards[i].match(/\d+/g))
       userScore += num
     }
+  }
+
+  while (numAces > 0 && userScore > 21){
+    userScore -= 10;
+    numAces -= 1;
   }
 }
 
 // calculate dealer score
 function calcDealerScore(){
   dealerScore = 0;
+  let numAces = 0;
   for (let i = 0; i < dealerCards.length; i++){
     if (dealerCards[i].includes('J') || dealerCards[i].includes('Q') || dealerCards[i].includes('K')){
       dealerScore += 10
     } else if (dealerCards[i].includes('A')){
-      dealerScore += 1
+      numAces += 1
+      dealerScore += 11
     } else {
       let num = parseInt(dealerCards[i].match(/\d+/g))
       dealerScore += num
     }
+  }
+
+  while (numAces > 0 && dealerScore > 21){
+    dealerScore -= 10;
+    numAces -= 1;
   }
 }
 
@@ -113,26 +133,56 @@ function calcDealerScore(){
 // otherwise, hit again or allow to stand
 function checkIfOver(){
   if(userScore > 21){
-    alert("You lost")
+    alert("You bust")
   }
 }
 
 // dealer hits again until score is greater than 17
 function playDealer(){
   calcDealerScore();
-  console.log(dealerScore)
+  while (dealerScore < 16){
+    newDealerCard();
+    calcDealerScore();
+  }
+  if (dealerScore == 21){
+    alert('dealer wins!')
+  } else if (dealerScore > 21){
+    alert('dealer bust. you win!')
+  } else if (dealerScore > userScore){
+    alert(`Dealer has ${dealerScore} points and you have ${userScore} points. Dealer wins!`)
+  } else {
+    alert (`You have ${userScore} points and dealer has ${dealerScore} points. You win!`)
+  }
 }
 
 // define what happens when stand is clicked
 function standHandler(){
   hitMe.classList.add('hidden');
-  playDealer();
   hiddenDealerCardElement.classList.remove('flipped');
   hiddenDealerCardElement.textContent = hiddenContent;
+  playDealer();
 }
 stand.addEventListener('click', standHandler);
 
-
-// decide winner
-
 // play again
+
+
+function againHandler(){
+  dealerSpace.innerHTML = '';
+  userSpace.innerHTML = '';
+  deck = [];
+  cardToDeal = '';
+  userScore = 0;
+  dealerScore = 0;
+  dealerCards = [];
+  userCards = [];
+  hiddenDealerCardElement = null;
+  hiddenContent = '';
+  hitMe.classList.remove('hidden');
+  newDeck();
+  dealerInitial();
+  userInitial();
+}
+again.addEventListener('click', againHandler);
+
+window.onload = againHandler();
