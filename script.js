@@ -78,7 +78,6 @@ function newUserCard(){
 function userInitial() {
   for (let i = 0; i < 2; i++){
     newUserCard()
-    checkIfOver()
   }
 }
 
@@ -122,36 +121,71 @@ function calcDealerScore(){
 function checkIfOver(){
   if(userScore > 21){
     alert("You bust")
+    hiddenDealerCardElement.classList.remove('flipped');
+    hiddenDealerCardElement.textContent = hiddenContent;
+    hitMe.disabled = true;
+    stand.disabled = true;
+    again.disabled = false;
   }
-  if (userScore == 21){
+  if (userScore === 21 && userCards.length === 2){
     alert("Blackjack! You win!")
+    hiddenDealerCardElement.classList.remove('flipped');
+    hiddenDealerCardElement.textContent = hiddenContent;
+    hitMe.disabled = true;
+    stand.disabled = true;
+    again.disabled = false;
   }
 }
 
 // dealer hits again until score is greater than 17
 function playDealer(){
   calcDealerScore();
-  while (dealerScore < 16){
-    newDealerCard();
-    calcDealerScore();
+  while (dealerScore < 17){
+      newDealerCard();
+      calcDealerScore();
   }
   if (dealerScore == 21){
-    alert('dealer hit 21 points and wins!')
+    setTimeout(() => {
+      alert('dealer hit 21 points and wins!')
+      stand.disabled = true;
+      again.disabled = false;
+    }, 800);
   } else if (dealerScore > 21){
-    alert('dealer bust. you win!')
+    setTimeout(() => {
+      alert('dealer bust. you win!')
+      stand.disabled = true;
+      again.disabled = false;
+    }, 800);
   } else if (dealerScore > userScore){
-    alert(`Dealer has ${dealerScore} points and you have ${userScore} points. Dealer wins!`)
+    setTimeout(() => {
+      alert(`Dealer has ${dealerScore} points and you have ${userScore} points. Dealer wins!`)
+      stand.disabled = true;
+      again.disabled = false;
+    }, 800);
+  } else if (userScore > dealerScore){
+    setTimeout(() => {
+      alert (`You have ${userScore} points and dealer has ${dealerScore} points. You win!`)
+      stand.disabled = true;
+      again.disabled = false;
+    }, 800);
   } else {
-    alert (`You have ${userScore} points and dealer has ${dealerScore} points. You win!`)
+    setTimeout(() => {
+      alert(`You and dealer both have ${userScore} points. It's a tie!`);
+      stand.disabled = true;
+      again.disabled = false;
+    }, 800);
   }
 }
 
 // define what happens when stand is clicked
 function standHandler(){
-  hitMe.classList.add('hidden');
-  hiddenDealerCardElement.classList.remove('flipped');
-  hiddenDealerCardElement.textContent = hiddenContent;
-  playDealer();
+  hitMe.disabled = true;
+  again.disabled = false;
+    hiddenDealerCardElement.classList.remove('flipped');
+    hiddenDealerCardElement.textContent = hiddenContent;
+  setTimeout(() => {
+    playDealer();
+  }, 800);
 }
 stand.addEventListener('click', standHandler);
 
@@ -168,10 +202,16 @@ function againHandler(){
   userCards = [];
   hiddenDealerCardElement = null;
   hiddenContent = '';
-  hitMe.classList.remove('hidden');
+  hitMe.disabled = false;
+  stand.disabled = false;
   newDeck();
   dealerInitial();
   userInitial();
+  if (userScore === 21 && userCards.length === 2){
+    again.disabled = false;
+  } else {
+    again.disabled = true;
+  }
 }
 again.addEventListener('click', againHandler);
 
