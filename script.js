@@ -122,10 +122,10 @@ $('document').ready(function() {
   function checkIfOver(){
     if(userScore > 21){
       setTimeout(() => {
-        alert("You bust");
-        hiddenDealerCardElement.removeClass('flipped');
-        hiddenDealerCardElement.text(hiddenContent);
+        alert("You busted :(");
       }, 800)
+      hiddenDealerCardElement.removeClass('flipped');
+      hiddenDealerCardElement.text(hiddenContent);
       // CITATION: I got this to work in vanilla javascript, but needed help from chatGPT to jquerify it.
       $hitMe.prop('disabled', true);
       $stand.prop('disabled', true);
@@ -150,15 +150,21 @@ $('document').ready(function() {
         newDealerCard();
         calcDealerScore();
     }
-    if (dealerScore == 21){
+    if (dealerScore == userScore){
       setTimeout(() => {
-        alert('dealer hit 21 points and wins!')
+        alert(`You and dealer both have ${userScore} points. It's a tie!`);
+        $stand.prop('disabled', true);
+        $again.prop('disabled', false);
+      }, 800);
+    } else if (dealerScore == 21){
+      setTimeout(() => {
+        alert('Dealer hits 21 points and wins!')
         $stand.prop('disabled', true);
         $again.prop('disabled', false);
       }, 800);
     } else if (dealerScore > 21){
       setTimeout(() => {
-        alert('dealer bust. you win!')
+        alert('Dealer busts. You win!')
         $stand.prop('disabled', true);
         $again.prop('disabled', false);
       }, 800);
@@ -170,13 +176,7 @@ $('document').ready(function() {
       }, 800);
     } else if (userScore > dealerScore){
       setTimeout(() => {
-        alert (`You have ${userScore} points and dealer has ${dealerScore} points. You win!`)
-        $stand.prop('disabled', true);
-        $again.prop('disabled', false);
-      }, 800);
-    } else {
-      setTimeout(() => {
-        alert(`You and dealer both have ${userScore} points. It's a tie!`);
+        alert (`Dealer has ${dealerScore} points and you have ${userScore} points. You win!`)
         $stand.prop('disabled', true);
         $again.prop('disabled', false);
       }, 800);
