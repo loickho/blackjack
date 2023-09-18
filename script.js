@@ -25,15 +25,15 @@ $('document').ready(function() {
         deck.push(number + suit)
       )
     )
-  }
+  };
 
   // get random card and remove it from deck
   function randomCard() {
-    let random = Math.floor(Math.random() * deck.length)
+    let random = Math.floor(Math.random() * deck.length);
     cardToDeal = deck[random]
     deck.splice(random, 1)
-    return cardToDeal
-  }
+    return cardToDeal;
+  };
 
   function createCardElement(card) {
     const cardElement = $('<div>');
@@ -44,7 +44,7 @@ $('document').ready(function() {
     }
     cardElement.text(card);
     return cardElement;
-  }
+  };
 
   // deal random card to dealer twice (one facedown)
     // face-down card & face-up card
@@ -57,17 +57,17 @@ $('document').ready(function() {
     $dealerSpace.append(hiddenDealerCardElement);
     dealerCards.push(card)
     newDealerCard()
-  }
+  };
 
-  // face-up dealer cards
+  // new face-up dealer card
   function newDealerCard(){
     var card = randomCard();
     const dealerCardElement = createCardElement(card);
     $dealerSpace.append(dealerCardElement);
     dealerCards.push(card)
-  }
+  };
 
-  // deal random card to player twice
+  // deal the user a new card
   function newUserCard(){
     var card = randomCard();
     const userCardElement = createCardElement(card);
@@ -75,12 +75,14 @@ $('document').ready(function() {
     userCards.push(card)
     calcUserScore()
     checkIfOver()
-  }
+  };
+
+  // deal random card to player twice
   function userInitial() {
     for (let i = 0; i < 2; i++){
       newUserCard()
     }
-  }
+  };
 
   // adds card when hit is clicked
   $hitMe.on('click', newUserCard);
@@ -100,25 +102,25 @@ $('document').ready(function() {
         let num = parseInt(cards[i].match(/\d+/g))
         score += num
       }
-    }
+    };
 
     while (numAces > 0 && score > 21){
       score -= 10;
       numAces -= 1;
     }
-    return score
-  }
+    return score;
+  };
 
   function calcUserScore(){
     userScore = calcScore(userCards);
-  }
+  };
 
   function calcDealerScore(){
     dealerScore = calcScore(dealerCards);
-  }
+  };
 
   // if goes over 21, lose
-  // otherwise, hit again or allow to stand
+  // check if blackjack
   function checkIfOver(){
     if(userScore > 21){
       setTimeout(() => {
@@ -130,7 +132,7 @@ $('document').ready(function() {
       $hitMe.prop('disabled', true);
       $stand.prop('disabled', true);
       $again.prop('disabled', false);
-    }
+    };
     if (userScore === 21 && userCards.length === 2){
       setTimeout(() => {
         alert("Blackjack! You win!");
@@ -140,10 +142,11 @@ $('document').ready(function() {
       $hitMe.prop('disabled', true);
       $stand.prop('disabled', true);
       $again.prop('disabled', false);
-    }
-  }
+    };
+  };
 
   // dealer hits again until score is greater than 17
+  // check outcome of game
   function playDealer(){
     calcDealerScore();
     while (dealerScore < 17){
@@ -180,8 +183,8 @@ $('document').ready(function() {
         $stand.prop('disabled', true);
         $again.prop('disabled', false);
       }, 800);
-    }
-  }
+    };
+  };
 
   // define what happens when stand is clicked
   function standHandler(){
@@ -192,7 +195,8 @@ $('document').ready(function() {
     setTimeout(() => {
       playDealer();
     }, 800);
-  }
+  };
+
   $stand.on('click', standHandler);
 
   // play again
@@ -218,7 +222,8 @@ $('document').ready(function() {
     } else {
       $again.prop('disabled', true);
     }
-  }
+  };
+
   $again.on('click', againHandler);
 
   window.onload = againHandler();
